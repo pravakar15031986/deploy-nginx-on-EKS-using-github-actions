@@ -78,10 +78,11 @@ module "eks" {
 
 
 
-# Retrieve EKS cluster information
+# Retrieve EKS cluster information and ensure data source waits for cluster to be created
 
 data "aws_eks_cluster" "myApp-cluster" {
   name = module.eks.cluster_name
+  depends_on = [module.eks]
 }
 
 data "aws_eks_cluster_auth" "myApp-cluster" {
