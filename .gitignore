@@ -1,5 +1,5 @@
 # ignore all .tfvars files
-*.tfvars
+# *.tfvars
 
 # ignore the .terraform directory
 .terraform/
