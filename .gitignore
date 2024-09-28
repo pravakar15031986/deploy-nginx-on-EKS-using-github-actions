@@ -1,0 +1,13 @@
+# ignore all .tfvars files
+*.tfvars
+
+# ignore the .terraform directory
+.terraform/
+
+# ignore terraform state files
+*.tfstate
+*.tfstate.backup
+
+# ignore kubectl binary
+kubectl
+
