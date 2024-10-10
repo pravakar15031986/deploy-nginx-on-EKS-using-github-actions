@@ -48,6 +48,35 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
+  # Additional security group rules
+  cluster_security_group_additional_rules = {
+  http_rule = {
+    description                = "Allow HTTP traffic from the internet"
+    protocol                   = "tcp"
+    from_port                  = 80
+    to_port                    = 80
+    cidr_blocks                = ["0.0.0.0/0"]  # Allow HTTP from anywhere
+    type                       = "ingress"
+  },
+  https_rule = {
+    description                = "Allow HTTPS traffic from the internet"
+    protocol                   = "tcp"
+    from_port                  = 443
+    to_port                    = 443
+    cidr_blocks                = ["0.0.0.0/0"]  # Allow HTTPS from anywhere
+    type                       = "ingress"
+  },
+  k8s_api_rule = {
+    description                = "Allow access to the Kubernetes API"
+    protocol                   = "tcp"
+    from_port                  = 6443
+    to_port                    = 6443
+    cidr_blocks                = ["0.0.0.0/0"]  # Allow access from anywhere
+    type                       = "ingress"
+  }
+}
+
+
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
 
