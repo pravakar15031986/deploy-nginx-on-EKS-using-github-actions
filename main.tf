@@ -125,7 +125,11 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.myApp-cluster.endpoint
   token                  = data.aws_eks_cluster_auth.myApp-cluster.token
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.myApp-cluster.certificate_authority[0].data)
-
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    command     = "aws"
+  }
 }
 
 #Kubernetes resources in Terraform
