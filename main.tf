@@ -25,6 +25,9 @@ module "vpc" {
   single_nat_gateway   = true
   enable_dns_hostnames = true
 
+  # This enables automatic public IP assignment for instances in public subnets
+  map_public_ip_on_launch = true
+
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1
   }
@@ -46,35 +49,19 @@ module "eks" {
 
 
   vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  subnet_ids = module.vpc.public_subnets
 
   # Additional security group rules
-  cluster_security_group_additional_rules = {
-  http_rule = {
-    description                = "Allow HTTP traffic from the internet"
-    protocol                   = "tcp"
-    from_port                  = 80
-    to_port                    = 80
-    cidr_blocks                = ["0.0.0.0/0"]  # Allow HTTP from anywhere
-    type                       = "ingress"
-  },
-  https_rule = {
-    description                = "Allow HTTPS traffic from the internet"
-    protocol                   = "tcp"
-    from_port                  = 443
-    to_port                    = 443
-    cidr_blocks                = ["0.0.0.0/0"]  # Allow HTTPS from anywhere
-    type                       = "ingress"
-  },
-  k8s_api_rule = {
-    description                = "Allow access to the Kubernetes API"
-    protocol                   = "tcp"
-    from_port                  = 6443
-    to_port                    = 6443
-    cidr_blocks                = ["0.0.0.0/0"]  # Allow access from anywhere
-    type                       = "ingress"
-  }
-}
+  node_security_group_additional_rules = {
+    allow_all_traffic = {
+      description                  = "Allow traffic from the internet"
+      protocol                     = "-1"  # Allow all protocols
+      from_port                    = 0
+      to_port                      = 65535  # Allow all ports
+      cidr_blocks                  = ["0.0.0.0/0"]  # Allow from anywhere
+      type                         = "ingress"
+    }
+  }  
 
 
   eks_managed_node_group_defaults = {
@@ -89,8 +76,8 @@ module "eks" {
       instance_types = ["t2.micro"]
 
       min_size     = 1
-      max_size     = 3
-      desired_size = 2
+      max_size     = 2
+      desired_size = 1
     }
 
     two = {
@@ -123,7 +110,6 @@ data "aws_eks_cluster_auth" "myApp-cluster" {
 provider "kubernetes" {
 
   host                   = data.aws_eks_cluster.myApp-cluster.endpoint
-  token                  = data.aws_eks_cluster_auth.myApp-cluster.token
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.myApp-cluster.certificate_authority[0].data)
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
