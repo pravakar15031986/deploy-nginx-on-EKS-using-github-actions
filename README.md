@@ -1,3 +1,24 @@
+# Provision and Deploy Infrastructure Seamlessly Using Terraform #
+
+**Project Overview**
+
+This project demonstrates the deployment of a Kubernetes cluster using Terraform and the integration of a CI/CD pipeline with GitHub Actions. The infrastructure is provisioned as code, ensuring consistency and scalability, while the CI/CD pipeline automates application deployment for seamless delivery.
+
+**Terraform:**
+
+Terraform is an open-source Infrastructure as Code (IaC) tool used to automate and manage cloud infrastructure. It allows you to define infrastructure resources (like servers, databases, and networks) in declarative configuration files and then provision them consistently across different environments.
+
+**Kubernetes:**
+
+Kubernetes is an open-source container orchestration platform designed to automate the deployment, scaling, and management of containerized applications. It helps ensure high availability, scalability, and efficient resource utilization across clusters of machines.
+
+**Github actions:**
+
+GitHub Actions is a CI/CD platform that allows you to automate workflows directly within your GitHub repository. It enables tasks like building, testing, and deploying code whenever specific events occur (e.g., push or pull requests). You can define workflows using YAML files to handle continuous integration and deployment pipelines.
+
+These tools work well together to streamline infrastructure management and application deployment.
+
+
 **Prerequisites**
 - AWS account
 - IAM user with administrator or neccessary role enabled
