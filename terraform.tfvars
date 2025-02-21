@@ -1,4 +1,4 @@
-region = "us-east-1"
+region = "eu-north-1"
 cluster_name = "myApp-eks"
 vpc_name = "myApp"
 vpc_cidr_block = "10.0.0.0/16"
